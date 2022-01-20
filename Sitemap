@@ -1,0 +1,16 @@
+Fluid 2d scrolling map scrolls one way left to right
+MANDATORY:
+-map rendering
+-fluid, scrolling environment
+-sword animations
+-sword spellcasting
+-HP tracking system
+-audio rendering
+-NPC spawning
+-NPC animations
+-damage tracking
+EXTREMELY NECESSARY:
+-sword cooldown
+-spell range
+MANDATORY:
+-collision
