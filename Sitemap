@@ -1,3 +1,4 @@
+  second person "mario"
 Fluid 2d scrolling map scrolls one way left to right
 MANDATORY:
 -map rendering
@@ -8,9 +9,17 @@ MANDATORY:
 -audio rendering
 -NPC spawning
 -NPC animations
+-HERO animations
 -damage tracking
 -collision
--Hitler's return
+
 EXTREMELY NECESSARY:
 -sword cooldown
 -spell range
+-Hitler's return
+
+    top down view "frogger"
+wasd to move
+fast paced
+mouse aim and shoot
+frogs attack from right to left
