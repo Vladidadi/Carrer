@@ -43,6 +43,8 @@ hit_cooldown = pygame.USEREVENT + 1
 
 ducking_ani_R = [pygame.image.load("Hero1.png"),pygame.image.load("Hero1_ducking_R.png"),pygame.image.load("Hero1_ducking_R.png"),pygame.image.load("Hero1_ducking_R.png"),pygame.image.load("Hero1_ducking_R.png"),pygame.image.load("Hero1_ducking_R.png"),pygame.image.load("Hero1_ducking_R.png"),pygame.image.load("Hero1.png")]
 
+ducking_ani_L = [pygame.image.load("Hero1_L.png"),pygame.image.load("Hero1_ducking_L.png"),pygame.image.load("Hero1_ducking_L.png"),pygame.image.load("Hero1_ducking_L.png"),pygame.image.load("Hero1_ducking_L.png"),pygame.image.load("Hero1_ducking_L.png"),pygame.image.load("Hero1_ducking_L.png"),pygame.image.load("Hero1_L.png")]
+
 run_ani_R = [pygame.image.load("Hero1.png"), pygame.image.load("Hero_move1.png"),pygame.image.load("Hero_move1.png"), pygame.image.load("Hero_move1.png"),pygame.image.load("Hero_move1.png"), pygame.image.load("Hero_move2.png"),pygame.image.load("Hero_move2.png"), pygame.image.load("Hero_move2.png"),pygame.image.load("Hero_move2.png")]
 
 run_ani_L = [pygame.image.load("Hero1_L.png"), pygame.image.load("Hero_move1_L.png"),pygame.image.load("Hero_move1_L.png"), pygame.image.load("Hero_move1_L.png"),pygame.image.load("Hero_move1_L.png"), pygame.image.load("Hero_move2_L.png"),pygame.image.load("Hero_move2_L.png"), pygame.image.load("Hero_move2_L.png"),pygame.image.load("Hero_move2_L.png")]
@@ -113,7 +115,7 @@ class EventHandler():
         self.enemy_generation = pygame.USEREVENT + 1
         self.stage = 1
         self.dead_enemy_count = 0
-
+        self.levelcomplete = False
 
         self.stage_enemies = []
         for x in range(1,21):
@@ -151,6 +153,8 @@ class EventHandler():
         button.imgdisp = 1
         castle.hide = True
         self.battle = True
+        background.bgimage = pygame.image.load("Background_world1.jpeg")
+        ground.image = pygame.image.load("ground_world1.png")
 
 
     def world2(self):
@@ -165,8 +169,25 @@ class EventHandler():
             self.dead_enemy_count = 0
             stage_display.clear = True
             stage_display.stage_clear()
+            self.levelcomplete = True
 
+    def home(self):
+        #reset battle code
+        pygame.time.set_timer(self.enemy_generation, 0)
+        self.battle = False
+        self.enemy_count = 0
+        self.dead_enemy_count = 0
+        self.stage = 1
 
+        #destroy enemites and items
+        for group in Enemies, Items:
+            for entity in group:
+                entity.kill()
+
+        #normalize background
+        castle.hide = False
+        background.bgimage = pygame.image.load("wallpaper.png")
+        ground.image = pygame.image.load("ground.png")
 
 
 class HealthBar(pygame.sprite.Sprite):
@@ -215,7 +236,7 @@ class StageDisplay(pygame.sprite.Sprite):
 
 
 class StatusBar(pygame.sprite.Sprite):
-    def __init(self):
+    def __init__(self):
         super().__init__()
         self.surf = pygame.Surface((90,66))
         self.rect = self.surf.get_rect(center = (500,10))
@@ -226,12 +247,14 @@ class StatusBar(pygame.sprite.Sprite):
         text2 = smallerfont.render("EXP: " + str(player.xp), True, color_white)
         text3 = smallerfont.render("MANA: " + str(player.mana), True, color_white)
         text4 = smallerfont.render("FPS: " + str(int(FPS_CLOCK.get_fps())), True, color_white)
+        text5 = smallerfont.render("SOULS OF FALLEN FOES: " + str(player.souls), True, color_white)
 
         #draws text to status StatusBar
         displaysurface.blit(text1, (595,7))
         displaysurface.blit(text2, (595,22))
         displaysurface.blit(text3, (595,37))
         displaysurface.blit(text4, (595,52))
+        displaysurface.blit(text5, (595,67))
 
 
 
@@ -260,7 +283,7 @@ class Item(pygame.sprite.Sprite):
                 health.image = health_ani[player.health]
                 self.kill()
             if self.type == 2:
-                #handler.money += 1
+                player.souls += 1
                 self.kill()
 
 
@@ -307,23 +330,7 @@ class Cursor(pygame.sprite.Sprite):
 
 
 
-    def home(self):
-        #reset battle code
-        pygame.time.set_timer(self.enemy_generation, 0)
-        self.battle = False
-        self.enemy_count = 0
-        self.dead_enemy_count = 0
-        self.stage = 1
 
-        #destroy enemites and items
-        for group in Enemies, Items:
-            for entity in group:
-                entity.kill()
-
-        #normalize background
-        castle.hide = False
-        background.bgimage = pygame.image.load("background.png")
-        ground.image = pygame.image.load("Ground.png")
 
 
 
@@ -360,9 +367,11 @@ class Player(pygame.sprite.Sprite):
         self.health = 5
         self.mana = 0
         self.xp = 0
+        self.souls = 0
 
 
     def move(self):
+      if cursor.wait ==1: return
       #will set to slow if player is slowed down
       self.acc = vec(0,0.5)    ###tutorial says use vel instead of vec
       if abs(self.vel.x) > .3:
@@ -375,6 +384,11 @@ class Player(pygame.sprite.Sprite):
           self.acc.x = -ACC
       if pressed_keys[K_d]:
           self.acc.x = ACC
+      if pressed_keys[K_SPACE]:
+          if self.direction == "RIGHT":
+              self.acc.x += 2
+          if self.direction == "LEFT":
+              self.acc.x -=2
 
       self.acc.x += self.vel.x * FRIC
       self.vel += self.acc
@@ -397,13 +411,13 @@ class Player(pygame.sprite.Sprite):
 
         #if touching ground and not jumping jump
         if hits and not self.jumping:
-            print(hits)
+
             self.jumping = True
-            self.vel.y = -12
+            self.vel.y = -18
     def duck(self):
         self.ducking = True
         now = pygame.time.get_ticks()
-        print("now:",now,"cooldown",self.cooldown,"lasttime:",self.lasttime)
+       # print("now:",now,"cooldown",self.cooldown,"lasttime:",self.lasttime)
         pressed_keys = pygame.key.get_pressed()
 
         if pressed_keys[K_s]:
@@ -440,8 +454,12 @@ class Player(pygame.sprite.Sprite):
             self.move_frame +=1
 
         if self.ducking == True and self.jumping == False:
-            self.image = ducking_ani_R[self.move_frame]
-            self.move_frame += 1
+            if self.direction == "LEFT":
+                self.image = ducking_ani_L[self.move_frame]
+                self.move_frame += 1
+            else:
+                self.image = ducking_ani_R[self.move_frame]
+                self.move_frame += 1
 
 
         now = pygame.time.get_ticks()
@@ -523,7 +541,7 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("fireball.png")
+        self.image = pygame.image.load("frog2.png")
         self.rect = self.image.get_rect()
         self.pos = vec(0,0)
         self.vel = vec(0,0)
@@ -651,10 +669,11 @@ while True:
             pygame.time.set_timer(hit_cooldown, 0)
 
         if event.type == handler.enemy_generation:
-            if handler.enemy_count < handler.stage_enemies[handler.stage -1]:
+            print("count: ", handler.enemy_count, "  stage enemies: ",  handler.stage_enemies[handler.stage -1])
+            while handler.enemy_count < handler.stage_enemies[handler.stage -1]:
                 enemy = Enemy()
                 Enemies.add(enemy)
-                handler.enemy_count += 1
+                handler.enemy_count +=  1#handler.stage_enemies[handler.stage -1] - handler.enemy_count
 
 
 
@@ -684,11 +703,17 @@ while True:
                       player.attacking = True
               if event.key == pygame.K_s:
                   player.duck()
+              if event.key == pygame.K_m:
+                  print("stage enemies[handler.stage -1] " ,handler.stage_enemies[handler.stage -1] , " dead_enemy_count " , handler.dead_enemy_count, "levelcomplete ", handler.levelcomplete, "enemy count ", handler.enemy_count)
+                  #print( "stage enemies " , handler.stage_enemies ,"genration ", handler.enemy_generation, "Enemies ", Enemies)
               if event.key == pygame.K_n:
-                  if handler.battle == True and len(Enemies) == 0:
+
+                  if handler.battle == True and handler.levelcomplete == True:
                       handler.next_stage()
                       stage_display = StageDisplay()
                       stage_display.display = True
+                      handler.levelcomplete = False
+    background.render()
     ground.render()
     button.render(button.imgdisp)
     cursor.hover()
@@ -723,9 +748,9 @@ while True:
 
 
     # Status bar update and render
-    print(dir(EventHandler))
-    print(dir(status_bar))
-   # displaysurface.blit(status_bar.rect, (580, 5))
+   # print(dir(EventHandler))
+    #print(dir(status_bar))
+    displaysurface.blit(status_bar.surf, (580, 5))
     status_bar.update_draw()
     handler.update()
 
