@@ -6,12 +6,17 @@ from tkinter import filedialog
 from tkinter import *
 import numpy
 
+
+
+
+
+
 pygame.init()  # Begin pygame
 
 # Declaring variables to be used through the program
 vec = pygame.math.Vector2
-HEIGHT = 800
-WIDTH = 800
+HEIGHT = 1080
+WIDTH = 1920
 ACC = 0.3
 FRIC = -0.10
 FPS = 60
@@ -30,10 +35,11 @@ regularfont = pygame.font.SysFont('Corbel',25)
 smallerfont = pygame.font.SysFont('Corbel',16)
 text = regularfont.render('LOAD' , True , color_light)
 
+resolution = (WIDTH,HEIGHT)
 
 
-
-
+flags = FULLSCREEN | DOUBLEBUF
+displaysurface = pygame.display.set_mode(resolution, flags, 16)
 
 
 
@@ -41,22 +47,20 @@ text = regularfont.render('LOAD' , True , color_light)
 hit_cooldown = pygame.USEREVENT + 1
 
 
-ducking_ani_R = [pygame.image.load("Hero1.png"),pygame.image.load("Hero1_ducking_R.png"),pygame.image.load("Hero1_ducking_R.png"),pygame.image.load("Hero1_ducking_R.png"),pygame.image.load("Hero1_ducking_R.png"),pygame.image.load("Hero1_ducking_R.png"),pygame.image.load("Hero1_ducking_R.png"),pygame.image.load("Hero1.png")]
+ducking_ani_R = [pygame.image.load("./RESOURCES/HERO/Hero1.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero1_ducking_R.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero1_ducking_R.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero1_ducking_R.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero1_ducking_R.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero1_ducking_R.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero1_ducking_R.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero1.png").convert_alpha()]
 
-ducking_ani_L = [pygame.image.load("Hero1_L.png"),pygame.image.load("Hero1_ducking_L.png"),pygame.image.load("Hero1_ducking_L.png"),pygame.image.load("Hero1_ducking_L.png"),pygame.image.load("Hero1_ducking_L.png"),pygame.image.load("Hero1_ducking_L.png"),pygame.image.load("Hero1_ducking_L.png"),pygame.image.load("Hero1_L.png")]
+ducking_ani_L = [pygame.image.load("./RESOURCES/HERO/Hero1_L.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero1_ducking_L.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero1_ducking_L.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero1_ducking_L.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero1_ducking_L.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero1_ducking_L.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero1_ducking_L.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero1_L.png").convert_alpha()]
 
-run_ani_R = [pygame.image.load("Hero1.png"), pygame.image.load("Hero_move1.png"),pygame.image.load("Hero_move1.png"), pygame.image.load("Hero_move1.png"),pygame.image.load("Hero_move1.png"), pygame.image.load("Hero_move2.png"),pygame.image.load("Hero_move2.png"), pygame.image.load("Hero_move2.png"),pygame.image.load("Hero_move2.png")]
+run_ani_R = [pygame.image.load("./RESOURCES/HERO/Hero1.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_move1.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero_move1.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_move1.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero_move1.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_move2.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero_move2.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_move2.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero_move2.png").convert_alpha()]
 
-run_ani_L = [pygame.image.load("Hero1_L.png"), pygame.image.load("Hero_move1_L.png"),pygame.image.load("Hero_move1_L.png"), pygame.image.load("Hero_move1_L.png"),pygame.image.load("Hero_move1_L.png"), pygame.image.load("Hero_move2_L.png"),pygame.image.load("Hero_move2_L.png"), pygame.image.load("Hero_move2_L.png"),pygame.image.load("Hero_move2_L.png")]
-
-
-attack_ani_R = [pygame.image.load("Hero1.png"), pygame.image.load("Hero_swing.png"), pygame.image.load("Hero_swing.png"), pygame.image.load("Hero_swing.png"), pygame.image.load("Hero_swing.png"), pygame.image.load("Hero_swing.png")]
-
-attack_ani_L = [pygame.image.load("Hero1_L.png"), pygame.image.load("Hero_swing_L.png"), pygame.image.load("Hero_swing_L.png"), pygame.image.load("Hero_swing_L.png"), pygame.image.load("Hero_swing_L.png"), pygame.image.load("Hero_swing_L.png"), pygame.image.load("Hero_swing_L.png")]
-
-health_ani = [pygame.image.load("tire0.png"), pygame.image.load("tire1.png"), pygame.image.load("tire2.png"), pygame.image.load("tire3.png"), pygame.image.load("tire4.png"), pygame.image.load("tire5.png")]
+run_ani_L = [pygame.image.load("./RESOURCES/HERO/Hero1_L.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_move1_L.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero_move1_L.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_move1_L.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero_move1_L.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_move2_L.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero_move2_L.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_move2_L.png").convert_alpha(),pygame.image.load("./RESOURCES/HERO/Hero_move2_L.png").convert_alpha()]
 
 
+attack_ani_R = [pygame.image.load("./RESOURCES/HERO/Hero1.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_swing.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_swing.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_swing.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_swing.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_swing.png").convert_alpha()]
+
+attack_ani_L = [pygame.image.load("./RESOURCES/HERO/Hero1_L.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_swing_L.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_swing_L.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_swing_L.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_swing_L.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_swing_L.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/Hero_swing_L.png").convert_alpha()]
+
+health_ani = [pygame.image.load("./RESOURCES/HERO/tire0.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/tire1.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/tire2.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/tire3.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/tire4.png").convert_alpha(), pygame.image.load("./RESOURCES/HERO/tire5.png").convert_alpha()]
 
 
 
@@ -72,13 +76,15 @@ health_ani = [pygame.image.load("tire0.png"), pygame.image.load("tire1.png"), py
 
 
 
-displaysurface = pygame.display.set_mode((WIDTH, HEIGHT))
+
+
+#displaysurface = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Carrer")
 
 class Background(pygame.sprite.Sprite):
       def __init__(self):
             super().__init__()
-            self.bgimage = pygame.image.load("wallpaper.png")
+            self.bgimage = pygame.image.load("./RESOURCES/BACKGROUND/wallpaper.png").convert_alpha()
             self.bgY = 0
             self.bgX = 0
       def render(self):
@@ -87,7 +93,7 @@ class Background(pygame.sprite.Sprite):
 class Ground(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("ground.png")
+        self.image = pygame.image.load("./RESOURCES/GROUND/ground.png").convert_alpha()
         self.rect = self.image.get_rect(center = (400, 600))
 
     def render(self):
@@ -99,7 +105,7 @@ class Castle(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.hide = False
-        self.image = pygame.image.load("Castle.png")
+        self.image = pygame.image.load("./RESOURCES/GAMEOBJECTS/Castle.png").convert_alpha()
 
     def update(self):
         if self.hide == False:
@@ -112,10 +118,12 @@ class EventHandler():
     def __init__(self):
         self.enemy_count = 0
         self.battle = False
-        self.enemy_generation = pygame.USEREVENT + 1
+        self.enemy_generation = pygame.USEREVENT + 2
+        self.enemy_generation2 = pygame.USEREVENT + 3
         self.stage = 1
         self.dead_enemy_count = 0
         self.levelcomplete = False
+        self.world = 0
 
         self.stage_enemies = []
         for x in range(1,21):
@@ -128,6 +136,12 @@ class EventHandler():
         print("Stage: " + str(self.stage))
         pygame.time.set_timer(self.enemy_generation, 1500 - (50 * self.stage))
         self.dead_enemy_count = 0
+
+        if self.world == 1:
+            pygame.time.set_timer(self.enemy_generation, 1500 - (50 * self.stage))
+        if self.world == 2:
+            pygame.time.set_timer(self.enemy_generation2, 1500 - (50 * self.stage))
+
 
     def stage_handler(self):
         #tkinter stage selection
@@ -153,11 +167,19 @@ class EventHandler():
         button.imgdisp = 1
         castle.hide = True
         self.battle = True
-        background.bgimage = pygame.image.load("Background_world1.jpeg")
-        ground.image = pygame.image.load("ground_world1.png")
+        background.bgimage = pygame.image.load("./BACKRESOURCES/GROUND/Background_world1.jpeg").convert_alpha()
+        ground.image = pygame.image.load("./RESOURCES/GROUND/ground_world1.png").convert_alpha()
 
 
     def world2(self):
+        self.root.destroy()
+        background.bgimage = pygame.image.load("./BACKRESOURCES/GROUND/background_world2.jpg").convert_alpha()
+        ground.image = pygame.image.load("./RESOURCES/GROUND/ground_world2.png").convert_alpha()
+
+        pygame.time.set_timer(self.enemy_generation2, 2500)
+
+        self.world = 2
+        castle.hide = True
         self.battle = True
         button.imgdisp = 1
 
@@ -174,10 +196,15 @@ class EventHandler():
     def home(self):
         #reset battle code
         pygame.time.set_timer(self.enemy_generation, 0)
+        pygame.time.set_timer(self.enemy_generation2, 0 )
+
         self.battle = False
         self.enemy_count = 0
         self.dead_enemy_count = 0
-        self.stage = 1
+        self.stage = 0
+        self.world = 0
+        health.image = pygame.image.load("./RESOURCES/HERO/tire5.png").convert_alpha()
+        player.health = 5
 
         #destroy enemites and items
         for group in Enemies, Items:
@@ -186,14 +213,14 @@ class EventHandler():
 
         #normalize background
         castle.hide = False
-        background.bgimage = pygame.image.load("wallpaper.png")
-        ground.image = pygame.image.load("ground.png")
+        background.bgimage = pygame.image.load("./BACKRESOURCES/GROUND/wallpaper.png").convert_alpha()
+        ground.image = pygame.image.load("./RESOURCES/GROUND/ground.png").convert_alpha()
 
 
 class HealthBar(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("tire5.png")
+        self.image = pygame.image.load("./RESOURCES/HERO/tire5.png").convert_alpha()
 
     def render(self):
         displaysurface.blit(self.image, (10,10))
@@ -262,8 +289,8 @@ class StatusBar(pygame.sprite.Sprite):
 class Item(pygame.sprite.Sprite):
     def __init__(self,itemtype):
         super().__init__()
-        if itemtype == 1: self.image = pygame.image.load("tire.png")
-        elif itemtype == 2: self.image = pygame.image.load("soul.png")
+        if itemtype == 1: self.image = pygame.image.load("./RESOURCES/HERO/tire1.png").convert_alpha()
+        elif itemtype == 2: self.image = pygame.image.load("./RESOURCES/ENEMY/soul.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.type = itemtype
         self.posx = 0
@@ -296,12 +323,12 @@ class PButton(pygame.sprite.Sprite):
 
     def render(self, num):
         if (num == 0):
-            self.image = pygame.image.load("home.png")
+            self.image = pygame.image.load("./RESOURCES/BUTTON/home.png").convert_alpha()
         elif (num == 1):
             if cursor.wait == 0:
-                self.image = pygame.image.load("pause.png")
+                self.image = pygame.image.load("./RESOURCES/BUTTON/pause.png").convert_alpha()
             else:
-                self.image = pygame.image.load("play.png")
+                self.image = pygame.image.load("./RESOURCES/BUTTON/play.png").convert_alpha()
 
         displaysurface.blit(self.image, self.vec)
 
@@ -309,7 +336,7 @@ class PButton(pygame.sprite.Sprite):
 class Cursor(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("cursor.png")
+        self.image = pygame.image.load("./RESOURCES/BUTTON/cursor.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.wait = 0
 
@@ -329,6 +356,56 @@ class Cursor(pygame.sprite.Sprite):
 
 
 
+class FireBall(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.direction = player.direction
+        if self.direction == "RIGHT":
+            self.image = pygame.image.load("./RESOURCES/PROJECTILE/fireball_R.png").convert_alpha()
+        else:
+            self.image = pygame.image.load("./RESOURCES/PROJECTILE/fireball_L.png").convert_alpha()
+        self.rect = self.image.get_rect(center = player.pos)
+        self.rect.x = player.pos.x
+        self.rect.y = player.pos.y - 40
+
+    def fire(self):
+        player.magic_cooldown = 0
+        #runs while on screen
+        if -10 < self.rect.x < 710:
+            if self.direction == "RIGHT":
+                self.image = pygame.image.load("./RESOURCES/PROJECTILE/fireball_R.png").convert_alpha()
+                displaysurface.blit(self.image, self.rect)
+            else:
+                self.image = pygame.image.load("./RESOURCES/PROJECTILE/fireball_L.png").convert_alpha()
+                displaysurface.blit(self.image, self.rect)
+
+            if self.direction == "RIGHT":
+
+
+                self.rect.move_ip(6,0)
+                if self.rect.x - abs(player.pos.x) > 100:
+                    self.rect.move_ip(12,0)
+
+            else:
+                self.rect.move_ip(-12,0)
+
+        else:
+            self.kill()
+            player.magic_cooldown = 1
+            player.attacking = False
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -345,7 +422,7 @@ class Cursor(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("Hero1.png")
+        self.image = pygame.image.load("./RESOURCES/HERO/Hero1.png").convert_alpha()
         self.rect = self.image.get_rect()
         #Combat
         self.attacking = False
@@ -541,7 +618,7 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load("frog2.png")
+        self.image = pygame.image.load("./RESOURCES/ENEMY/frog2.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.pos = vec(0,0)
         self.vel = vec(0,0)
@@ -586,7 +663,10 @@ class Enemy(pygame.sprite.Sprite):
         #checks collision
         hits = pygame.sprite.spritecollide(self, playergroup, False)
 
-        if hits and player.attacking == True:
+        #checks fireball collision
+        f_hits = pygame.sprite.spritecollide(self, Fireballs, False)
+
+        if hits and player.attacking == True or f_hits:
             print("Enemy killed")
             if player.mana < 100: player.mana += self.mana
             player.xp += 1
@@ -594,9 +674,9 @@ class Enemy(pygame.sprite.Sprite):
 
             rand_num = numpy.random.uniform(0,100)
             item_no = 0
-            if rand_num >=0 and rand_num <=50:           #one in twenty
+            if rand_num >=0 and rand_num <=5:           #one in twenty
                 item_no = 1
-            elif rand_num > 51 and rand_num <= 100:       #one in ten
+            elif rand_num > 5 and rand_num <= 15:       #one in ten
                 item_no = 2
             if item_no != 0:
                 #add item to items group
@@ -614,7 +694,175 @@ class Enemy(pygame.sprite.Sprite):
 
 
         elif hits and player.attacking == False:
+            if cursor.wait == 0: pass
             player.player_hit()
+
+
+class Enemy2(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.pos = vec(0,0)
+        self.vel = vec(0,0)
+        self.wait = 0
+        self.wait_status = False
+        self.turning = 0
+
+        self.direction = random.randint(0,1)    #0 for right
+        self.vel.x = random.randint(2,6) / 3    # random velocity
+        self.mana = random.randint(2,3)         #random mana
+
+        if self.direction == 0: self.image =                    pygame.image.load("./RESOURCES/ENEMY/waluigi.png").convert_alpha()
+        if self.direction == 1: self.image = pygame.image.load("./RESOURCES/ENEMY/waluigi_L.png").convert_alpha()
+        self.rect = self.image.get_rect()
+
+        #sets initial position of enemy
+        if self.direction == 0:
+            self.pos.x = 0
+            self.pos.y = 250
+        if self.direction == 1:
+            self.pos.x = 700
+            self.pos.y = 250
+
+
+    def move(self):
+        if cursor.wait ==1: return
+
+        #causes enemy to change directions when reaching wall
+        if self.pos.x >= (WIDTH-20):
+            self.direction = 1
+        elif self.pos.x <= 0:
+            self.direction = 0
+
+
+        #updates position with new values
+        if self.wait > 50:
+            self.wait_status = True
+        elif int(self.wait) <= 0:
+            self.wait_status = False
+
+        if self.direction_check():
+            self.turn()
+            self.wait = 90
+            self.turning = 1
+
+        if self.wait_status == True:
+            rand_num = numpy.random.uniform(0,50)
+            if int(rand_num) == 25:
+                bolt = Bolt(self.pos.x, self.pos.y, self.direction)
+                Bolts.add(bolt)
+            self.wait -= 1
+
+        elif self.direction == 0:
+            self.pos.x += self.vel.x
+            self.wait += self.vel.x
+        elif self.direction == 1:
+            self.pos.x -= self.vel.x
+            self.wait += self.vel.x
+
+        self.rect.topleft = self.pos # updates rect
+
+    def update(self):
+        #checks collision with player
+        hits = pygame.sprite.spritecollide(self, playergroup, False)
+        #checks fireballs
+        f_hits = pygame.sprite.spritecollide(self, Fireballs, False)
+
+        #if either of the above is true
+        if hits and player.attacking == True or f_hits:
+            self.kill()
+            handler.dead_enemy_count += 1
+
+            if player.mana < 100: player.mana += self.mana
+            player.xp += 1
+
+            rand_num = numpy.random.uniform(0, 100)
+            item_no = 0
+            if rand_num >= 0 and rand_num <= 5:     #1/20 chance
+                item_no = 1
+            elif rand_num > 5 and rand_num <= 15:
+                item_no = 2
+
+            if item_no != 0:
+                #add item to items group
+                item = Item(item_no)
+                Items.add(item)
+                #sets item location to dead enemy
+                item.posx = self.pos.x
+                item.posy = self.pos.y
+
+
+    def render(self):
+        #display on screen
+        displaysurface.blit(self.image, self.rect)
+
+    def direction_check(self):
+        if (player.pos.x - self.pos.x < 0 and self.direction == 0):
+            return 1
+        elif (player.pos.x - self.pos.x > 0 and self.direction == 1):
+            return 1
+        else:
+            return 0
+
+
+    def turn(self):
+        if self.wait > 0:
+            self.wait -= 1
+            return
+        elif int(self.wait) <= 0:
+            self.turning = 0
+
+        if (self.direction):
+            self.direction = 0
+            self.image = pygame.image.load("./RESOURCES/ENEMY/waluigi.png").convert_alpha()
+        else:
+            self.direction = 1
+            self.image = pygame.image.load("./RESOURCES/ENEMY/waluigi2.png").convert_alpha()
+
+
+class Bolt(pygame.sprite.Sprite):
+    def __init__(self, x, y ,d):
+        super().__init__()
+        self.image = pygame.image.load("./RESOURCES/PROJECTILE/bolt.png").convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.x = x + 15
+        self.rect.y = y + 20
+        self.direction = d
+
+    def fire(self):
+        #runs while bolt is within the screen
+        if -10 < self.rect.x < 710:
+            if self.direction == 0:
+                self.image = pygame.image.load("./PROJECTILEbolt.png").convert_alpha()
+                displaysurface.blit(self.image, self.rect)
+            else:
+                self.image = pygame.image.load("./PROJECTILEbolt_L.png").convert_alpha()
+                displaysurface.blit(self.image, self.rect)
+
+            if self.direction == 0:
+                self.rect.move_ip(12, 0)
+            else:
+                self.rect.move_ip(-12, 0)
+
+        else:
+            self.kill()
+
+        #checks collision
+        hits = pygame.sprite.spritecollide(self, playergroup, False)
+        if hits:
+            player.player_hit()
+            self.kill()
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -629,6 +877,8 @@ playergroup = pygame.sprite.Group()
 playergroup.add(player)
 ground_group = pygame.sprite.Group()
 ground_group.add(ground)
+
+Fireballs = pygame.sprite.Group()
 
 castle = Castle()
 handler = EventHandler()
@@ -650,7 +900,7 @@ button = PButton()
 
 cursor = Cursor()
 
-
+Bolts = pygame.sprite.Group()
 
 
 
@@ -675,7 +925,11 @@ while True:
                 Enemies.add(enemy)
                 handler.enemy_count +=  1#handler.stage_enemies[handler.stage -1] - handler.enemy_count
 
-
+        if event.type == handler.enemy_generation2:
+            if handler.enemy_count < handler.stage_enemies[handler.stage -1]:
+                enemy = Enemy2()
+                Enemies.add(enemy)
+                handler.enemy_count += 1
 
 
         if event.type == QUIT:
@@ -713,6 +967,17 @@ while True:
                       stage_display = StageDisplay()
                       stage_display.display = True
                       handler.levelcomplete = False
+
+              if event.key == pygame.K_l: # and player.magic_cooldown == 1
+       #           if player.mana >= 6:
+        #              player.mana -= 6
+                      player.attacking = True
+                      fireball = FireBall()
+                      Fireballs.add(fireball)
+
+
+
+
     background.render()
     ground.render()
     button.render(button.imgdisp)
@@ -729,6 +994,11 @@ while True:
     if player.health > 0:
           displaysurface.blit(player.image, player.rect)
     health.render()
+    for ball in Fireballs:
+        ball.fire()
+    for bolt in Bolts:
+        bolt.fire()
+
     for entity in Enemies:
             entity.update()
             entity.move()
